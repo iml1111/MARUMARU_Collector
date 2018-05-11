@@ -6,6 +6,7 @@
 
     You can download cartoon shorts or download the whole series.
     
+--------------------------------------------------------------------------------
 
 2. How to use
 
@@ -14,6 +15,8 @@
    $ Select mode All or Single(a/s)(Short or Series)
 
    $ Plz input URL(only MARUMARU URL)   
+   
+---------------------------------------------------------------------------------
    
 
 3. Not perfect
