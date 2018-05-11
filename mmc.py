@@ -1,8 +1,8 @@
 """	MARUMARU COLLECTOR	"""
-"""	     	  BY IML  		"""
+"""	     	  BY IML  	"""
 """	shin10256@gmail.com   	"""	
-"""	shino1025.blog.me    		"""
-"""	github.com/iml1111   		"""	
+"""	shino1025.blog.me    	"""
+"""	github.com/iml1111   	"""	
 
 from urllib.request import FancyURLopener, HTTPError
 from bs4 import BeautifulSoup
