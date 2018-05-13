@@ -42,11 +42,22 @@ def MultiCollect(bs0bj):
 
 def SingleCollect(bs0bj,Comic_count,Comic_total):
 	comic_title = Collecting(bs0bj,Comic_count,Comic_total)
-	filelist = makePDF(comic_title)
-	Removing(filelist)
+	if comic_title == "Protected":
+		print("This comic is Protected! Fail!")
+	else:
+		filelist = makePDF(comic_title)
+		Removing(filelist)
 
 
 def Collecting(bs0bj,Comic_count,Comic_total):
+	os.system('cls')
+	print("< Current Progress >")
+	print("Total: " + str(Comic_count) + " / " + str(Comic_total))
+
+	protect = bs0bj.find("h2")
+	if protect != None :
+		return protect.get_text()
+
 	comic_title = bs0bj.find("div",{"class":"article-title"}).attrs['title']
 	comic_images = bs0bj.findAll("img")
 	count = 1
@@ -58,7 +69,7 @@ def Collecting(bs0bj,Comic_count,Comic_total):
 
 	for img in comic_images:
 		imgurl = Comics_Page + img.attrs['data-src']
-		imgfile = comic_title + "_(" + "%05d" % count + ").jpg"
+		imgfile = comic_title + "_(" + "%04d" % count + ").jpg"
 		count = count + 1
 		download(imgurl,imgfile)
 
