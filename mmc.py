@@ -15,7 +15,7 @@ import img2pdf
 class AppURLopener(FancyURLopener):     			 
    	version = "Mozilla/5.0"
 
-dirname = os.path.dirname(os.path.realpath(__file__))
+dirname = os.path.dirname(os.path.realpath(sys.executable))
 Comics_Page = "http://wasabisyrup.com"
 
 def URLparser(URL):
