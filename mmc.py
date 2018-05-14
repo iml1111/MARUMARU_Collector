@@ -15,8 +15,11 @@ import img2pdf
 class AppURLopener(FancyURLopener):     			 
    	version = "Mozilla/5.0"
 
-dirname = os.path.dirname(os.path.realpath(sys.executable))
+dirname = os.path.dirname(os.path.realpath('__file__'))
+#dirname = os.path.dirname(os.path.realpath(sys.executable))
+
 Comics_Page = "http://wasabisyrup.com"
+
 
 def Initializing():
 	
@@ -31,6 +34,7 @@ def Initializing():
 	mode = input("[*] MODE is All or Single ?(a/s) ")
 	return mode
 
+
 def URLparser(URL):
 	try:
 		html = AppURLopener().open(URL)
@@ -40,6 +44,7 @@ def URLparser(URL):
 		sys.exit(1)
 
 	return BeautifulSoup(html.read(), "html.parser")
+
 
 def MultiCollect(bs0bj):
 	Allcomics =bs0bj.findAll("a",{"href":re.compile("http://www.shencomics.com/archives/.*")})\
@@ -52,6 +57,7 @@ def MultiCollect(bs0bj):
 		bsbj = URLparser(url.attrs['href'])
 		SingleCollect(bsbj,Comic_count,Comic_total)
 		Comic_count += 1
+
 
 def SingleCollect(bs0bj,Comic_count,Comic_total):
 	comic_title = Collecting(bs0bj,Comic_count,Comic_total)
@@ -72,32 +78,40 @@ def Collecting(bs0bj,Comic_count,Comic_total):
 		return protect.get_text()
 
 	comic_title = bs0bj.find("div",{"class":"article-title"}).attrs['title']
+	title_filter = '\\/<>:?!*"|'
+	comic_title = comic_title.translate({ ord(x): y for (x, y) in zip(title_filter, "          ") })
+
 	comic_images = bs0bj.findAll("img")
 	count = 1
 
-	def download(url, file_name):
-		with open(file_name, "wb") as file:
-			response = get(url)
-			file.write(response.content)
-
 	for img in comic_images:
 		imgurl = Comics_Page + img.attrs['data-src']
-		imgfile = comic_title + "_(" + "%04d" % count + ").jpg"
+		imgfile = dirname + "\\" + comic_title + "_(" + "%04d" % count + ").jpg"
 		count = count + 1
+		print("\n# Link: " + imgurl)
+		print("||\n||\n# Downloading to ->  " + imgfile)
 		download(imgurl,imgfile)
 
 		os.system('cls')
 		print("< Current Progress >")
 		print("# Total: " + str(Comic_count) + " / " + str(Comic_total))
-		print("# Collecting " + imgfile + "   |   Progress:[", end='')
+		print("# Collecting " + comic_title + "\n# Progress:[", end='')
 		for i in range(13):
 			if (i / 13) <= (count / len(comic_images)):
 				print("ㅁ", end ='')
 			else:
 				print("   ", end='')
-		print(']')
+		print(' ]')
 
 	return comic_title
+
+
+def download(url , file_name):
+		with open(file_name, "wb") as file:
+			response = get(url,stream = True)
+			for chunk in response.iter_content(2000):
+				file.write(chunk)
+
 
 def makePDF(comic_title):
 	try:
@@ -111,12 +125,15 @@ def makePDF(comic_title):
 
 	return os.listdir(dirname)
 
+
 def Removing(filelist):
 	for file in filelist:
 		path = os.path.join(dirname, file)
 		if path.endswith(".jpg"):
 			os.remove(path)
 	print("[*] Removing image files.")
+
+
 
 if __name__ == '__main__':
 
