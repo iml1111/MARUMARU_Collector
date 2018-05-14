@@ -14,7 +14,3 @@ setup(
     options = dict(build_exe = buildOptions),
     executables = exe
 )
-
-# cxfrees는 몇몇패키지를 미리담줘야함https://github.com/anthony-tuininga/cx_Freeze/issues/228
-# windows는 sys.eexcutable
-#mac은 __file__ (글로벌 사용가능)
