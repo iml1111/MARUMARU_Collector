@@ -18,12 +18,24 @@ class AppURLopener(FancyURLopener):
 dirname = os.path.dirname(os.path.realpath(sys.executable))
 Comics_Page = "http://wasabisyrup.com"
 
+def Initializing():
+	
+	print(" @            @         @            @        @@@@ ")
+	print("@ @      @ @      @ @      @ @     @           @")
+	print("@  @    @  @      @  @    @  @     @              ")
+	print("@   @  @   @      @   @  @   @     @           @")
+	print("@     @      @      @     @      @       @@@@       Ver. 0.1 by IML")
+
+	print("\n$ HI! THIS IS MARUAMRU COLLECTOR! $\n")
+	mode = input("[*] MODE is All or Single ?(a/s) ")
+	return mode
+
 def URLparser(URL):
 	try:
 		html = AppURLopener().open(URL)
 	except HTTPError as e:
 		print(e)
-		print("ERROR!")
+		print("[*] HTTP ERROR!")
 		sys.exit(1)
 
 	return BeautifulSoup(html.read(), "html.parser")
@@ -43,7 +55,7 @@ def MultiCollect(bs0bj):
 def SingleCollect(bs0bj,Comic_count,Comic_total):
 	comic_title = Collecting(bs0bj,Comic_count,Comic_total)
 	if comic_title == "Protected":
-		print("This comic is Protected! Fail!")
+		print("[*] This comic is Protected! Fail!")
 	else:
 		filelist = makePDF(comic_title)
 		Removing(filelist)
@@ -75,8 +87,8 @@ def Collecting(bs0bj,Comic_count,Comic_total):
 
 		os.system('cls')
 		print("< Current Progress >")
-		print("Total: " + str(Comic_count) + " / " + str(Comic_total))
-		print("Collecting " + imgfile + "   |   Progress:[", end='')
+		print("# Total: " + str(Comic_count) + " / " + str(Comic_total))
+		print("# Collecting " + imgfile + "   |   Progress:[", end='')
 		for i in range(13):
 			if (i / 13) <= (count / len(comic_images)):
 				print("ㅁ", end ='')
@@ -90,10 +102,10 @@ def makePDF(comic_title):
 	try:
 		with open(comic_title + ".pdf", "wb") as f:
 			f.write(img2pdf.convert([i for i in os.listdir(dirname) if i.endswith(".jpg")]))
-		print("Combing to PDF file.")
+		print("[*] Combing to PDF file.")
 	except:
-		print("PDF File Can't Make.")
-		print("Program Down!")
+		print("[*] PDF File Can't Make.")
+		print("[*] Program Down!")
 		sys.exit(1)
 
 	return os.listdir(dirname)
@@ -103,24 +115,23 @@ def Removing(filelist):
 		path = os.path.join(dirname, file)
 		if path.endswith(".jpg"):
 			os.remove(path)
-	print("Removing image files.")
+	print("[*] Removing image files.")
 
 if __name__ == '__main__':
 
-	print("HI! THIS IS MARUAMRU COLLECTOR!")
+	mode = Initializing()
 
-	mode = input("MODE is All or Single ?(a/s) ")
 	if mode != 'a' and mode != 's':
-		print("plz right command.")
+		print("[*] plz right command.")
 		sys.exit(1)
 
-	URL = input("Plz input URL(only MARUMARU): ")
+	URL = input("[*] Please input URL(only MARUMARU): ")
 	bs0bj = URLparser(URL)
-	print("URL Parsing & Web Crawling...")
+	print("[*] URL Parsing & Web Crawling...")
 
 	if mode == 's':
 		SingleCollect(bs0bj,1,1)
 	else:
 		MultiCollect(bs0bj)
 
-	print("Complete!")
+	print("[*] Complete!")
