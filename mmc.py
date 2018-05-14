@@ -1,6 +1,6 @@
 """	MARUMARU COLLECTOR	"""
 """	     	  BY IML  	"""
-"""	shin10256@gmail.com   	"""	
+"""	shin10256|gmail.com   	"""	
 """	shino1025.blog.me    	"""
 """	github.com/iml1111   	"""	
 
@@ -20,11 +20,12 @@ Comics_Page = "http://wasabisyrup.com"
 
 def Initializing():
 	
-	print(" @            @         @            @        @@@@ ")
-	print("@ @      @ @      @ @      @ @     @           @")
-	print("@  @    @  @      @  @    @  @     @              ")
-	print("@   @  @   @      @   @  @   @     @           @")
-	print("@     @      @      @     @      @       @@@@       Ver. 0.1 by IML")
+	os.system('cls')
+	print("   |      |         |      |       ||||||")
+	print("  | |    | |       ||     | |      |    |     ")
+	print(" ||  |  |  ||     ||  |  |  ||     |              ")
+	print(" ||   ||   ||     ||   ||   ||     |    |     ")
+	print(" ||   ||   ||     ||   ||   ||     ||||||   Ver. 0.1 by IML")
 
 	print("\n$ HI! THIS IS MARUAMRU COLLECTOR! $\n")
 	mode = input("[*] MODE is All or Single ?(a/s) ")
