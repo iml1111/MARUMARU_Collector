@@ -1,0 +1,20 @@
+[0623/020031.917:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/020031.919:ERROR:exception_snapshot_win.cc(88)] thread ID 9260 not found in process
+[0623/020114.102:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/020114.103:ERROR:exception_snapshot_win.cc(88)] thread ID 1400 not found in process
+[0623/020220.089:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/020220.090:ERROR:exception_snapshot_win.cc(88)] thread ID 15720 not found in process
+[0623/020358.772:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/020358.773:ERROR:exception_snapshot_win.cc(88)] thread ID 16376 not found in process
+[0623/020358.893:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/020358.894:ERROR:exception_snapshot_win.cc(88)] thread ID 9912 not found in process
+[0623/020508.367:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/020508.368:ERROR:exception_snapshot_win.cc(88)] thread ID 8432 not found in process
+[0623/022912.412:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/022912.413:ERROR:exception_snapshot_win.cc(88)] thread ID 8432 not found in process
+[0623/022912.494:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/022912.495:ERROR:exception_snapshot_win.cc(88)] thread ID 4948 not found in process
+[0623/024111.375:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/024111.376:ERROR:exception_snapshot_win.cc(88)] thread ID 2552 not found in process
+[0623/025551.102:ERROR:process_reader_win.cc(123)] NtOpenThread: {액세스 거부} 프로세스가 개체에 액세스를 요구했지만 액세스 권한이 없습니다. (0xc0000022)
+[0623/025551.103:ERROR:exception_snapshot_win.cc(88)] thread ID 5964 not found in process

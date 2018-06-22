@@ -4,22 +4,30 @@
 """	shino1025.blog.me    	"""
 """	github.com/iml1111   	"""	
 
-from urllib.request import FancyURLopener, HTTPError
+from selenium import webdriver
 from bs4 import BeautifulSoup
-from requests import get
 import re
 import sys
 import os
 import img2pdf
+import time
+import requests
 
-class AppURLopener(FancyURLopener):     			 
-   	version = "Mozilla/5.0"
+header = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)\
+			AppleWebKit 537.36 (KHTML, like Gecko) Chrome",
+			"Accept":"text/html,application/xhtml+xml,application/xml;\
+			q=0.9,imgwebp,*/*;q=0.8"}
 
 dirname = os.path.dirname(os.path.realpath('__file__'))
 #dirname = os.path.dirname(os.path.realpath(sys.executable))
-
 Comics_Page = "http://wasabisyrup.com"
 
+# chrome download setting
+chrome_options = webdriver.ChromeOptions()
+preferences = {"download.default_directory": dirname,
+               "directory_upgrade": True,
+               "safebrowsing.enabled": True }
+chrome_options.add_experimental_option("prefs", preferences)
 
 def Initializing():
 	
@@ -35,18 +43,17 @@ def Initializing():
 	return mode
 
 
+
 def URLparser(URL):
-	try:
-		html = AppURLopener().open(URL)
-	except HTTPError as e:
-		print(e)
-		print("[*] HTTP ERROR!")
-		sys.exit(1)
-
-	return BeautifulSoup(html.read(), "html.parser")
+	driver = webdriver.Chrome(chrome_options=chrome_options)
+	driver.implicitly_wait(1)
+	driver.get(URL)
+	return driver
 
 
-def MultiCollect(bs0bj):
+
+def MultiCollect(driver):
+	bs0bj = BeautifulSoup(driver.page_source, "html.parser")
 	Allcomics =bs0bj.findAll("a",{"href":re.compile("http://www.shencomics.com/archives/.*")})\
 		     +bs0bj.findAll("a",{"href":re.compile("http://www.yuncomics.com/archives/.*")})\
 		     +bs0bj.findAll("a",{"href":re.compile("http://wasabisyrup.com/archives/.*")})
@@ -54,18 +61,22 @@ def MultiCollect(bs0bj):
 	Comic_total = len(Allcomics)	     
 
 	for url in Allcomics:
-		bsbj = URLparser(url.attrs['href'])
-		SingleCollect(bsbj,Comic_count,Comic_total)
+		drv = URLparser(url.attrs['href'])
+		SingleCollect(drv,Comic_count,Comic_total)
 		Comic_count += 1
 
 
-def SingleCollect(bs0bj,Comic_count,Comic_total):
+
+def SingleCollect(driver,Comic_count,Comic_total):
+	bs0bj = BeautifulSoup(driver.page_source, "html.parser")
 	comic_title = Collecting(bs0bj,Comic_count,Comic_total)
+
 	if comic_title == "Protected":
 		print("[*] This comic is Protected! Fail!")
 	else:
 		filelist = makePDF(comic_title)
 		Removing(filelist)
+
 
 
 def Collecting(bs0bj,Comic_count,Comic_total):
@@ -105,12 +116,23 @@ def Collecting(bs0bj,Comic_count,Comic_total):
 
 	return comic_title
 
-
+'''
 def download(url , file_name):
-		with open(file_name, "wb") as file:
-			response = get(url,stream = True)
-			for chunk in response.iter_content(2000):
-				file.write(chunk)
+	driver = webdriver.Chrome(chrome_options=chrome_options)
+	time.sleep(3)
+	response = driver.get(url)
+	print(response)
+	time.sleep(1)
+	with open(file_name, "wb") as file:
+		file.write(response)
+'''
+def download(url, file_name):
+	session = requests.Session()
+	req = session.get(url, headers = header)
+
+	with open(file_name, "wb") as file:
+		file.write(req.content)
+
 
 
 def makePDF(comic_title):
@@ -144,12 +166,12 @@ if __name__ == '__main__':
 		sys.exit(1)
 
 	URL = input("[*] Please input URL(only MARUMARU): ")
-	bs0bj = URLparser(URL)
+	driver= URLparser(URL)
 	print("[*] URL Parsing & Web Crawling...")
 
 	if mode == 's':
-		SingleCollect(bs0bj,1,1)
+		SingleCollect(driver,1,1)
 	else:
-		MultiCollect(bs0bj)
+		MultiCollect(driver)
 
 	print("[*] Complete!")
