@@ -10,24 +10,12 @@ import re
 import sys
 import os
 import img2pdf
-import time
 import requests
-
-header = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)\
-			AppleWebKit 537.36 (KHTML, like Gecko) Chrome",
-			"Accept":"text/html,application/xhtml+xml,application/xml;\
-			q=0.9,imgwebp,*/*;q=0.8"}
 
 dirname = os.path.dirname(os.path.realpath('__file__'))
 #dirname = os.path.dirname(os.path.realpath(sys.executable))
 Comics_Page = "http://wasabisyrup.com"
 
-# chrome download setting
-chrome_options = webdriver.ChromeOptions()
-preferences = {"download.default_directory": dirname,
-               "directory_upgrade": True,
-               "safebrowsing.enabled": True }
-chrome_options.add_experimental_option("prefs", preferences)
 
 def Initializing():
 	
@@ -36,7 +24,7 @@ def Initializing():
 	print("  | |    | |       ||     | |      |    |     ")
 	print(" ||  |  |  ||     ||  |  |  ||     |              ")
 	print(" ||   ||   ||     ||   ||   ||     |    |     ")
-	print(" ||   ||   ||     ||   ||   ||     ||||||   Ver. 0.1 by IML")
+	print(" ||   ||   ||     ||   ||   ||     ||||||   Ver. 0.2 by IML")
 
 	print("\n$ HI! THIS IS MARUAMRU COLLECTOR! $\n")
 	mode = input("[*] MODE is All or Single ?(a/s) ")
@@ -45,7 +33,10 @@ def Initializing():
 
 
 def URLparser(URL):
-	driver = webdriver.Chrome(chrome_options=chrome_options)
+	print("[*] Chrome Driver Starting...")
+	print("-------------------------------------\n")
+	driver = webdriver.Chrome('./chromedriver')
+	driver.set_window_size(600, 400)
 	driver.implicitly_wait(1)
 	driver.get(URL)
 	return driver
@@ -64,12 +55,14 @@ def MultiCollect(driver):
 		drv = URLparser(url.attrs['href'])
 		SingleCollect(drv,Comic_count,Comic_total)
 		Comic_count += 1
+		drv.close()
 
 
 
 def SingleCollect(driver,Comic_count,Comic_total):
+	print("[*] URL Parsing & Web Crawling...")
 	bs0bj = BeautifulSoup(driver.page_source, "html.parser")
-	comic_title = Collecting(bs0bj,Comic_count,Comic_total)
+	comic_title = Collecting(driver.current_url,bs0bj,Comic_count,Comic_total)
 
 	if comic_title == "Protected":
 		print("[*] This comic is Protected! Fail!")
@@ -79,7 +72,7 @@ def SingleCollect(driver,Comic_count,Comic_total):
 
 
 
-def Collecting(bs0bj,Comic_count,Comic_total):
+def Collecting(curl,bs0bj,Comic_count,Comic_total):
 	os.system('cls')
 	print("< Current Progress >")
 	print("Total: " + str(Comic_count) + " / " + str(Comic_total))
@@ -99,9 +92,12 @@ def Collecting(bs0bj,Comic_count,Comic_total):
 		imgurl = Comics_Page + img.attrs['data-src']
 		imgfile = dirname + "\\" + comic_title + "_(" + "%04d" % count + ").jpg"
 		count = count + 1
+
 		print("\n# Link: " + imgurl)
-		print("||\n||\n# Downloading to ->  " + imgfile)
-		download(imgurl,imgfile)
+		for i in range(3):
+			print("||\t\t\t||\t\t\t||\t\t\t||")
+		print("# Downloading to ->  " + imgfile)
+		download(curl,imgurl,imgfile)
 
 		os.system('cls')
 		print("< Current Progress >")
@@ -113,22 +109,22 @@ def Collecting(bs0bj,Comic_count,Comic_total):
 			else:
 				print("   ", end='')
 		print(' ]')
+		print("Browser: Chrome")
 
 	return comic_title
 
-'''
-def download(url , file_name):
-	driver = webdriver.Chrome(chrome_options=chrome_options)
-	time.sleep(3)
-	response = driver.get(url)
-	print(response)
-	time.sleep(1)
-	with open(file_name, "wb") as file:
-		file.write(response)
-'''
-def download(url, file_name):
+
+
+def download(url,imgurl, file_name):
+	header = {
+			"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)\
+			AppleWebKit 537.36 (KHTML, like Gecko) Chrome",
+			"Accept":"text/html,application/xhtml+xml,application/xml;\
+			q=0.9,imgwebp,*/*;q=0.8",
+			"Referer": url}
+
 	session = requests.Session()
-	req = session.get(url, headers = header)
+	req = session.get(imgurl, headers = header)
 
 	with open(file_name, "wb") as file:
 		file.write(req.content)
@@ -146,6 +142,7 @@ def makePDF(comic_title):
 		sys.exit(1)
 
 	return os.listdir(dirname)
+
 
 
 def Removing(filelist):
@@ -167,11 +164,12 @@ if __name__ == '__main__':
 
 	URL = input("[*] Please input URL(only MARUMARU): ")
 	driver= URLparser(URL)
-	print("[*] URL Parsing & Web Crawling...")
 
 	if mode == 's':
 		SingleCollect(driver,1,1)
 	else:
 		MultiCollect(driver)
 
+	print("[*] Closing Chrome..")
+	driver.close()
 	print("[*] Complete!")

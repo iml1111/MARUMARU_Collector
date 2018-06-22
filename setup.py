@@ -2,7 +2,7 @@ from cx_Freeze import setup, Executable
 import sys
 
 buildOptions = dict(packages = 
-	["idna","urllib","bs4","requests","re","sys","os","img2pdf"], 
+	["idna","urllib","bs4","requests","re","sys","os","img2pdf","selenium"], 
 	excludes = [])
 exe = [Executable("MMC.py")]
 
