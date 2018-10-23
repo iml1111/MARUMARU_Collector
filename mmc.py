@@ -9,6 +9,7 @@ import sys
 import os
 import img2pdf
 import requests
+import lxml
 from urllib.request import FancyURLopener, HTTPError
 
 dirname = os.path.dirname(os.path.realpath('__file__'))
@@ -22,27 +23,22 @@ def Initializing():
 	
 	os.system('cls')
 	print("   |      |         |      |      ||||||")
-	print("  | |    | |       ||     | |     |    |     ")
+	print("  | |    | |       ||     ||      |    |     ")
 	print(" ||  |  |  ||     ||  |  |  ||     |              ")
 	print(" ||   ||   ||     ||   ||   ||     |    |     ")
-	print(" ||   ||   ||     ||   ||   ||     ||||||   Ver. 0.2 by IML")
+	print(" ||   ||   ||     ||   ||   ||     ||||||   Ver. 0.3 by IML")
 
 	print("\n$ HI! THIS IS MARUAMRU COLLECTOR! $\n")
 	mode = input("[*] MODE is All or Single ?(a/s) ")
 	return mode
 
 def URLparser2(URL):
-	try:
-		html = AppURLopener().open(URL)
-	except:
-		print("Connection Error")
-		html = AppURLopener().open(URL)
-
+	html = AppURLopener().open(URL)
 	return html
 
 
 def MultiCollect(driver):
-	bs0bj = BeautifulSoup(driver.read(), "html.parser")
+	bs0bj = BeautifulSoup(driver.read(), "lxml")
 	Allcomics =bs0bj.findAll("a",{"href":re.compile("http://www.shencomics.com/archives/.*")})\
 		     +bs0bj.findAll("a",{"href":re.compile("http://www.yuncomics.com/archives/.*")})\
 		     +bs0bj.findAll("a",{"href":re.compile("http://wasabisyrup.com/archives/.*")})
@@ -56,10 +52,9 @@ def MultiCollect(driver):
 		drv.close()
 
 
-
 def SingleCollect(driver,Comic_count,Comic_total):
 	print("[*] URL Parsing & Web Crawling...")
-	bs0bj = BeautifulSoup(driver.read(), "html.parser")
+	bs0bj = BeautifulSoup(driver.read(), "lxml")
 	comic_title = Collecting(driver.geturl(),bs0bj,Comic_count,Comic_total)
 
 	if comic_title == "Protected":
@@ -67,7 +62,6 @@ def SingleCollect(driver,Comic_count,Comic_total):
 	else:
 		filelist = makePDF(comic_title)
 		Removing(filelist)
-
 
 
 def Collecting(curl,bs0bj,Comic_count,Comic_total):
@@ -90,10 +84,7 @@ def Collecting(curl,bs0bj,Comic_count,Comic_total):
 		imgurl = Comics_Page + img.attrs['data-src']
 		imgfile = dirname + "\\" + comic_title + "_(" + "%04d" % count + ").jpg"
 		count = count + 1
-
-		print("\n# Link: " + imgurl)
-		for i in range(3):
-			print("||\t\t\t||\t\t\t||\t\t\t||")
+		print("\n# Link -> " + imgurl)
 		print("# Downloading to ->  " + imgfile)
 		download(curl,imgurl,imgfile)
 
@@ -107,10 +98,8 @@ def Collecting(curl,bs0bj,Comic_count,Comic_total):
 			else:
 				print("   ", end='')
 		print(' ]')
-		print("Browser: Chrome")
 
 	return comic_title
-
 
 
 def download(url,imgurl, file_name):
@@ -128,7 +117,6 @@ def download(url,imgurl, file_name):
 		file.write(req.content)
 
 
-
 def makePDF(comic_title):
 	try:
 		with open(comic_title + ".pdf", "wb") as f:
@@ -142,14 +130,12 @@ def makePDF(comic_title):
 	return os.listdir(dirname)
 
 
-
 def Removing(filelist):
 	for file in filelist:
 		path = os.path.join(dirname, file)
 		if path.endswith(".jpg"):
 			os.remove(path)
 	print("[*] Removing image files.")
-
 
 
 if __name__ == '__main__':
@@ -161,13 +147,11 @@ if __name__ == '__main__':
 		sys.exit(1)
 
 	URL = input("[*] Please input URL(only MARUMARU): ")
+	print("[*] Starting...")
 	driver = URLparser2(URL)
 
 	if mode == 's':
 		SingleCollect(driver,1,1)
 	else:
 		MultiCollect(driver)
-
-	print("[*] Closing Chrome..")
-	driver.close()
 	print("[*] Complete!")
